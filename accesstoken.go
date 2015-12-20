@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// Change this to your preferred signing algorithm
+var DEFAULT_ALGORITHM = jwt.SigningMethodHS256
+
 // A Twilio AccessToken
 type AccessToken struct {
 	accountSid string // SID from here: https://www.twilio.com/user/account/settings
@@ -48,7 +51,7 @@ func (t *AccessToken) AddGrant(grant Grant) {
 func (t *AccessToken) ToJWT(algorithm jwt.SigningMethod) (string, error) {
 
 	if algorithm == nil {
-		algorithm = jwt.SigningMethodHS256
+		algorithm = DEFAULT_ALGORITHM
 	}
 
 	token := jwt.New(algorithm)
