@@ -1,4 +1,4 @@
-# gotwilio-accesstoken
+# accesstoken-go
 Go AccessToken creator for Twilio with support for grants
 
 This uses [https://github.com/dgrijalva/jwt-go](fantastic JWT library from dgrijalva)
