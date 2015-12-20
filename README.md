@@ -16,6 +16,7 @@ go get github.com/corytodd/accesstoken-go
 ### Sample
 Sample app using credentials stored in your env
 
+```go
     package main
 
     import (
@@ -91,3 +92,4 @@ Sample app using credentials stored in your env
     	http.HandleFunc("/token", token)
     	http.ListenAndServe(":8080", nil)
     }
+```
