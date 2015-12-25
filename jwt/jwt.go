@@ -156,22 +156,19 @@ func signString(hash crypto.Hash, msg string, key []byte) []byte {
 	return hasher.Sum(nil)
 }
 
-// encodeSegment returns the specified data as a base64 URL encoded string
 func encodeSegment(data map[string]interface{}) string {
 	b, _ := json.Marshal(data)
 	return encodeBase64Url(b)
 }
 
-// encodeBase64Url returns data as base64 encoded URL with padding stripped
 func encodeBase64Url(data []byte) string {
 	return strings.TrimRight(base64.URLEncoding.EncodeToString(data), "=")
 }
 
-// decodeBase64Url returns the
-func decodeBase64Url(seg string) ([]byte, error) {
-	if l := len(seg) % 4; l > 0 {
-		seg += strings.Repeat("=", 4-l)
+func decodeBase64Url(data string) ([]byte, error) {
+	if l := len(data) % 4; l > 0 {
+		data += strings.Repeat("=", 4-l)
 	}
 
-	return base64.URLEncoding.DecodeString(seg)
+	return base64.URLEncoding.DecodeString(data)
 }
