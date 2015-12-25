@@ -1,4 +1,4 @@
-# accesstoken-go
+# accesstoken-go [![Build Status](https://travis-ci.org/corytodd/accesstoken-go.svg?branch=master)](https://travis-ci.org/corytodd/accesstoken-go)
 Go AccessToken creator for Twilio with support for grants. This library supports HS256, HS384, and HS512 hashing using
 a minimal JWT implementation.
 
