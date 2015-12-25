@@ -11,24 +11,18 @@ var DefaultAlgorithm = jwt.HS256
 
 // AccessToken is a JWT that grants access to Twilio services
 type AccessToken struct {
-	accountSid string // SID from here: https://www.twilio.com/user/account/settings
-	apiKey     string // Generated here: https://www.twilio.com/user/account/video/dev-tools/api-keys
-	apiSecret  string // Generated here: https://www.twilio.com/user/account/video/dev-tools/api-keys
-
-	// Default: ""
-	Identity string // Generated here: https://www.twilio.com/user/account/video/profiles
-
-	// Default: 3600
-	ttl int64 // Must be a UTC timestamp
-
-	// Default: unset
-	nbf string // Not before time: current date/time must be after this time
-
-	grants []Grant // Slice of grants attached to this
+	accountSid string  // SID from here: https://www.twilio.com/user/account/settings
+	apiKey     string  // Generated here: https://www.twilio.com/user/account/video/dev-tools/api-keys
+	apiSecret  string  // Generated here: https://www.twilio.com/user/account/video/dev-tools/api-keys
+	Identity   string  // Generated here: https://www.twilio.com/user/account/video/profiles
+	ttl        int64   // Must be a UTC timestamp (in milliseconds). Default: 3600
+	nbf        string  // Not before time: current date/time must be after this time
+	grants     []Grant // Slice of grants attached to this
 }
 
+// New creates a new AccessToken. TTL is set to default and
+// grants are defaulted to an empty slice of Grant.
 func New(accountSid, apiKey, apiSecret string) *AccessToken {
-
 	var grants []Grant
 	return &AccessToken{
 		accountSid: accountSid,
@@ -40,13 +34,14 @@ func New(accountSid, apiKey, apiSecret string) *AccessToken {
 
 }
 
-// Attach a grant to this AccessToken
+// AddGrant adds a grant to this AccessToken
 func (t *AccessToken) AddGrant(grant Grant) {
 	t.grants = append(t.grants, grant)
 }
 
-// Ported from: https://github.com/twilio/twilio-python/blob/master/twilio/access_token.py
+// ToJWT returns this token as a signed JWT using the specified hash algorithm
 // Returns the signed JWT or an error
+// Ported from: https://github.com/twilio/twilio-python/blob/master/twilio/access_token.py
 func (t *AccessToken) ToJWT(algorithm string) (string, error) {
 
 	if algorithm == "" {
@@ -75,7 +70,7 @@ func (t *AccessToken) ToJWT(algorithm string) (string, error) {
 		}
 
 		for _, grant := range t.grants {
-			payload["grants"].(map[string]interface{})[grant.key()] = grant.ToPayload()
+			payload["grants"].(map[string]interface{})[grant.key()] = grant.toPayload()
 		}
 
 	}

@@ -19,6 +19,7 @@ import (
 	_ "crypto/sha512" // Required for linking SHA384 and SHA512 to binary
 )
 
+// Possible error conditions
 var (
 	ErrUnsupportedAlgorithm         = errors.New("Algorithm not supported")
 	ErrHashNotAvailable             = errors.New("The specified hash is not available")
@@ -26,15 +27,16 @@ var (
 	ErrInvalidSegmentEncoding       = errors.New("Invalid segment encoding")
 	ErrNotEnoughSegments            = errors.New("Not enough segments")
 	ErrTooManySegments              = errors.New("Too many segments")
-
-	signingMethods = map[string]crypto.Hash{}
 )
 
+// Supported hash algorithms
 const (
-	HS256 = "HS256"
-	HS384 = "HS384"
-	HS512 = "HS512"
+	HS256 = "HS256" // HMAC SHA256 implementation
+	HS384 = "HS384" // HMAC SHA384 implementation
+	HS512 = "HS512" // HMAC SHA512 implementation
 )
+
+var signingMethods = map[string]crypto.Hash{}
 
 func init() {
 
@@ -85,9 +87,8 @@ func Decode(jwt string, key string, verify bool) (interface{}, error) {
 	if len(splits) != 3 {
 		if len(splits) < 3 {
 			return nil, ErrNotEnoughSegments
-		} else {
-			return nil, ErrTooManySegments
 		}
+		return nil, ErrTooManySegments
 	}
 
 	payloadRaw, err := decodeBase64Url(splits[1])
