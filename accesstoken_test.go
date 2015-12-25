@@ -1,60 +1,39 @@
 package accesstoken
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/corytodd/accesstoken-go/jwt"
 	"testing"
 )
 
-const SECRET = "abvdefghijklmnopqrstuvwxyz01234567"
+const testSecret = "abvdefghijklmnopqrstuvwxyz01234567"
 
 // Generate a token and verify the signature (HS256)
 func TestJWTToken(t *testing.T) {
 
-	token := New("accountSid", "apiKey", SECRET)
+	token := New("accountSid", "apiKey", testSecret)
 
 	token.Identity = "TestAccount"
 
 	videoGrant := NewConversationsGrant("videoSid")
 	token.AddGrant(videoGrant)
 
-	sig, err := token.ToJWT("HS256")
+	signed, err := token.ToJWT(jwt.HS256)
 
 	if err != nil {
 		t.Errorf("token.ToJWT Failed: %v", err)
 		t.Fail()
 	}
 
-	t.Logf("Token: %s", sig)
+	t.Logf("Token: %s", signed)
 
 	// Parse the token.  Load the key from command line option
-	parsed, err := jwt.Parse(sig, func(t *jwt.Token) (interface{}, error) {
-		return []byte(SECRET), nil
-	})
+	parsed, err := jwt.Decode(signed, testSecret, true)
 
 	// Print an error if we can't parse for some reason
 	if err != nil {
 		t.Errorf("Couldn't parse token: %v", err)
 	}
 
-	// Is token invalid?
-	if !parsed.Valid {
-		t.Errorf("Token is invalid")
-	}
+	t.Logf("Parse: %s", parsed)
 
-}
-
-// Print a json object in accordance with the prophecy (or the command line options)
-func printJSON(j interface{}) error {
-	var out []byte
-	var err error
-
-	out, err = json.Marshal(j)
-
-	if err == nil {
-		fmt.Println(string(out))
-	}
-
-	return err
 }
