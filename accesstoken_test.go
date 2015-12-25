@@ -14,6 +14,8 @@ func TestJWTToken(t *testing.T) {
 
 	token.Identity = "TestAccount"
 
+	token.nbf = 16810232
+
 	videoGrant := NewConversationsGrant("videoSid")
 	token.AddGrant(videoGrant)
 

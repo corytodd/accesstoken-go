@@ -81,5 +81,5 @@ func (t *AccessToken) ToJWT(algorithm string) (string, error) {
 	}
 
 	//Sign and return the AccessToken
-	return jwt.Encode(payload, header, t.apiSecret, "HS256")
+	return jwt.Encode(payload, header, t.apiSecret, algorithm)
 }
