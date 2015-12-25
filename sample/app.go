@@ -5,9 +5,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/corytodd/accesstoken-go"
 	"net/http"
 	"os"
+
+	"github.com/corytodd/accesstoken-go"
 )
 
 // Handles GET request for token
@@ -32,7 +33,7 @@ func token(w http.ResponseWriter, r *http.Request) {
 	grant := accesstoken.NewConversationsGrant(os.Getenv("TW_VIDEO_SID"))
 	myToken.AddGrant(grant)
 
-	signedJWT, err := myToken.ToJWT(accesstoken.DEFAULT_ALGORITHM)
+	signedJWT, err := myToken.ToJWT(accesstoken.DefaultAlgorithm)
 
 	if err != nil {
 		w.WriteHeader(500)
@@ -40,7 +41,7 @@ func token(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := &Response{
+	resp := &response{
 		"identity": id,
 		"token":    signedJWT,
 	}
@@ -58,9 +59,9 @@ func token(w http.ResponseWriter, r *http.Request) {
 }
 
 //Convenience interface for printing anonymous JSON objects
-type Response map[string]interface{}
+type response map[string]interface{}
 
-func (r Response) String() (s string) {
+func (r response) String() (s string) {
 	b, err := json.Marshal(r)
 	if err != nil {
 		s = ""
