@@ -1,11 +1,10 @@
 # accesstoken-go
-Go AccessToken creator for Twilio with support for grants
-
-This uses [https://github.com/dgrijalva/jwt-go](fantastic JWT library from dgrijalva)
+Go AccessToken creator for Twilio with support for grants. This library supports HS256, HS384, and HS512 hashing using
+a minimal JWT implementation.
 
 Uses the static resources from: https://github.com/TwilioDevEd/video-quickstart-python
 
-Basically a port of the AccessToken portion of: https://github.com/twilio/twilio-python
+This is basically a port of the AccessToken portion of: https://github.com/twilio/twilio-python
 
 ### Usage
 
