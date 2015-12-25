@@ -38,7 +38,7 @@ func init() {
 }
 
 // Encode creates a valid, signed JWT with the given payload and optional headers.
-func Encode(payload map[string]interface{}, key string, algorithm string, customHeaders map[string]interface{}) (string, error) {
+func Encode(payload map[string]interface{}, customHeaders map[string]interface{}, key string, algorithm string) (string, error) {
 
 	alg, ok := signingMethods[algorithm]
 	if !ok {

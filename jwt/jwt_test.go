@@ -21,7 +21,7 @@ func TestEncode(t *testing.T) {
 		"exp": "1450900077",
 	}
 
-	sig, err := Encode(payload, Secret, "HS256", headers)
+	sig, err := Encode(payload, headers, Secret, "HS256")
 
 	if err != nil {
 
