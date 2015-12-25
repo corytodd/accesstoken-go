@@ -49,7 +49,7 @@ Sample app using credentials stored in your env
     	grant := accesstoken.NewConversationsGrant(os.Getenv("TW_VIDEO_SID"))
     	myToken.AddGrant(grant)
     
-    	signedJWT, err := myToken.ToJWT(accesstoken.DEFAULT_ALGORITHM)
+    	signedJWT, err := myToken.ToJWT(accesstoken.DefaultAlgorithm)
     
     	if err != nil {
     		w.WriteHeader(500)

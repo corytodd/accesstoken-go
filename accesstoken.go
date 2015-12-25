@@ -2,14 +2,15 @@ package accesstoken
 
 import (
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
-// Change this to your preferred signing algorithm
-var DEFAULT_ALGORITHM = jwt.SigningMethodHS256
+// DefaultAlgorithm is your preferred signing algorithm
+var DefaultAlgorithm = jwt.SigningMethodHS256
 
-// A Twilio AccessToken
+// AccessToken is a JWT that grants access to Twilio services
 type AccessToken struct {
 	accountSid string // SID from here: https://www.twilio.com/user/account/settings
 	apiKey     string // Generated here: https://www.twilio.com/user/account/video/dev-tools/api-keys
@@ -27,7 +28,6 @@ type AccessToken struct {
 	grants []Grant // Slice of grants attached to this
 }
 
-// Create a new AccessToken
 func New(accountSid, apiKey, apiSecret string) *AccessToken {
 
 	var grants []Grant
@@ -51,7 +51,7 @@ func (t *AccessToken) AddGrant(grant Grant) {
 func (t *AccessToken) ToJWT(algorithm jwt.SigningMethod) (string, error) {
 
 	if algorithm == nil {
-		algorithm = DEFAULT_ALGORITHM
+		algorithm = DefaultAlgorithm
 	}
 
 	token := jwt.New(algorithm)
