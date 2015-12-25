@@ -32,7 +32,12 @@ func TestEncode(t *testing.T) {
 		t.Logf("Token: %s", sig)
 	}
 
-	decoded := Decode(sig, Secret, true)
+	decoded, err := Decode(sig, Secret, true)
+
+	if err != nil {
+		t.Errorf("Failed to decode: %v", err)
+		t.Fail()
+	}
 
 	t.Logf("Decoded: %v", decoded)
 

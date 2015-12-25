@@ -79,31 +79,31 @@ func Encode(payload map[string]interface{}, customHeaders map[string]interface{}
 
 // Decode returns the payload portion of the JWT and optionally
 // verifies the signature
-func Decode(jwt string, key string, verify bool) interface{} {
+func Decode(jwt string, key string, verify bool) (interface{}, error) {
 	splits := strings.Split(jwt, ".")
 
 	if len(splits) != 3 {
 		if len(splits) < 3 {
-			return ErrNotEnoughSegments
+			return nil, ErrNotEnoughSegments
 		} else {
-			return ErrTooManySegments
+			return nil, ErrTooManySegments
 		}
 	}
 
 	payloadRaw, err := decodeBase64Url(splits[1])
 	if err != nil {
-		return ErrInvalidSegmentEncoding
+		return nil, ErrInvalidSegmentEncoding
 	}
 
 	payload := jsonDumps(string(payloadRaw))
 
 	if verify {
 		if err := verifySignature(splits, []byte(key)); err != nil {
-			return err
+			return nil, err
 		}
 	}
 
-	return payload
+	return payload, nil
 }
 
 // verifySignature returns nil or a specific error if the JWT signature is invalid
