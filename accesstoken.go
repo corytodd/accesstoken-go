@@ -16,7 +16,7 @@ type AccessToken struct {
 	apiSecret  string  // Generated here: https://www.twilio.com/user/account/video/dev-tools/api-keys
 	Identity   string  // Generated here: https://www.twilio.com/user/account/video/profiles
 	ttl        int64   // Must be a UTC timestamp (in milliseconds). Default: 3600
-	nbf        string  // Not before time: current date/time must be after this time
+	nbf        int64   // Not before time: current date/time must be after this time. Default: 0 (not enforced)
 	grants     []Grant // Slice of grants attached to this
 }
 
@@ -29,6 +29,7 @@ func New(accountSid, apiKey, apiSecret string) *AccessToken {
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
 		ttl:        3600,
+		nbf:        0,
 		grants:     grants,
 	}
 
@@ -75,7 +76,7 @@ func (t *AccessToken) ToJWT(algorithm string) (string, error) {
 
 	}
 
-	if len(t.nbf) > 0 {
+	if t.nbf != 0 {
 		payload["nbf"] = t.nbf
 	}
 
