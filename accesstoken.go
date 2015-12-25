@@ -2,13 +2,12 @@ package accesstoken
 
 import (
 	"fmt"
+	"github.com/corytodd/accesstoken-go/jwt"
 	"time"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 // DefaultAlgorithm is your preferred signing algorithm
-var DefaultAlgorithm = jwt.SigningMethodHS256
+var DefaultAlgorithm = "HS256"
 
 // AccessToken is a JWT that grants access to Twilio services
 type AccessToken struct {
@@ -48,42 +47,43 @@ func (t *AccessToken) AddGrant(grant Grant) {
 
 // Ported from: https://github.com/twilio/twilio-python/blob/master/twilio/access_token.py
 // Returns the signed JWT or an error
-func (t *AccessToken) ToJWT(algorithm jwt.SigningMethod) (string, error) {
+func (t *AccessToken) ToJWT(algorithm string) (string, error) {
 
-	if algorithm == nil {
+	if algorithm == "" {
 		algorithm = DefaultAlgorithm
 	}
 
-	token := jwt.New(algorithm)
-
-	token.Header["typ"] = "JWT"
-	token.Header["cty"] = "twilio-fpa;v=1"
-
-	if len(t.grants) > 0 {
-
-		token.Claims["grants"] = map[string]interface{}{}
-
-		if len(t.Identity) > 0 {
-			token.Claims["grants"].(map[string]interface{})["identity"] = t.Identity
-		}
-
-		for _, grant := range t.grants {
-			token.Claims["grants"].(map[string]interface{})[grant.key()] = grant.ToPayload()
-		}
-
+	header := map[string]interface{}{
+		"typ": "JWT",
+		"cty": "twilio-fpa;v=1",
 	}
 
 	now := time.Now().UTC().Unix()
+	payload := map[string]interface{}{}
 
-	token.Claims["jti"] = fmt.Sprintf("%s-%d", t.apiKey, now)
-	token.Claims["iss"] = t.apiKey
-	token.Claims["sub"] = t.accountSid
-	token.Claims["exp"] = now + t.ttl
+	payload["jti"] = fmt.Sprintf("%s-%d", t.apiKey, now)
+	payload["iss"] = t.apiKey
+	payload["sub"] = t.accountSid
+	payload["exp"] = now + t.ttl
+
+	if len(t.grants) > 0 {
+
+		payload["grants"] = map[string]interface{}{}
+
+		if len(t.Identity) > 0 {
+			payload["grants"].(map[string]interface{})["identity"] = t.Identity
+		}
+
+		for _, grant := range t.grants {
+			payload["grants"].(map[string]interface{})[grant.key()] = grant.ToPayload()
+		}
+
+	}
 
 	if len(t.nbf) > 0 {
-		token.Claims["nbf"] = t.nbf
+		payload["nbf"] = t.nbf
 	}
 
 	//Sign and return the AccessToken
-	return token.SignedString([]byte(t.apiSecret))
+	return jwt.Encode(payload, header, t.apiSecret, "HS256")
 }

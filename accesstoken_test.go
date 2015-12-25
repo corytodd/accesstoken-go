@@ -19,7 +19,7 @@ func TestJWTToken(t *testing.T) {
 	videoGrant := NewConversationsGrant("videoSid")
 	token.AddGrant(videoGrant)
 
-	sig, err := token.ToJWT(jwt.SigningMethodHS256)
+	sig, err := token.ToJWT("HS256")
 
 	if err != nil {
 		t.Errorf("token.ToJWT Failed: %v", err)
