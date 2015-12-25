@@ -7,7 +7,7 @@ import (
 )
 
 // DefaultAlgorithm is your preferred signing algorithm
-var DefaultAlgorithm = "HS256"
+var DefaultAlgorithm = jwt.HS256
 
 // AccessToken is a JWT that grants access to Twilio services
 type AccessToken struct {

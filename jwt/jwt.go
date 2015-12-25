@@ -30,6 +30,12 @@ var (
 	signingMethods = map[string]crypto.Hash{}
 )
 
+const (
+	HS256 = "HS256"
+	HS384 = "HS384"
+	HS512 = "HS512"
+)
+
 func init() {
 
 	signingMethods["HS256"] = crypto.SHA256
