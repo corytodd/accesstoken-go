@@ -13,8 +13,6 @@ import (
 	"errors"
 	"strings"
 
-	"log"
-
 	_ "crypto/sha256" // Required for linking SHA256 to binary
 	_ "crypto/sha512" // Required for linking SHA384 and SHA512 to binary
 )
@@ -72,8 +70,6 @@ func Encode(payload map[string]interface{}, customHeaders map[string]interface{}
 
 	segments = append(segments, encodeBase64Url(signature))
 	token := strings.Join(segments, ".")
-
-	log.Printf("token: %s", token)
 
 	return token, nil
 
